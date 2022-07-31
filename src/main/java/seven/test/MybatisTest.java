@@ -40,13 +40,13 @@ public class MybatisTest {
         mapper.findAllWithRole().forEach(user-> System.out.println(user));
         //sqlSession.getMapper(IOrderMapper.class).findAllWithUser2().forEach(order -> System.out.println(order));
         //sqlSession.getMapper(IUserMapper.class).findAllWithOrder2().forEach(user -> System.out.println(user));
-        sqlSession.close();
+        //sqlSession.close();
         //sqlSession.clearCache();
         //sqlSessionFactory.openSession().getMapper(IUserMapper.class).findAllWithOrder2().forEach(user -> System.out.println(user));
         //mapper.findAllWithOrder().forEach(user -> System.out.println(user));
 
-        // 释放资源
-       // sqlSession.close();
+         //释放资源
+        sqlSession.close();
 
     }
 }
