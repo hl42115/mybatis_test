@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="seven.mapper.IRoleMapper">
+    <resultMap id="roleMap" type="role">
+        <id column="id" property="id"></id>
+        <result column="roleName" property="roleName"></result>
+        <result column="roleDesc" property="roleDesc"></result>
+       <!-- &lt;!&ndash;一对一（多对一）使用association标签关联 property="user" 封装实体的属性名 javaType="user" 封装实体的属性类型 &ndash;&gt;
+        <association property="user" javaType="user">
+            <id column="uid" property="id"></id>
+            <result column="roleName" property="roleName"></result>
+            <result column="roleDesc" property="roleDesc"></result>
+        </association>-->
+    </resultMap>
+
+    <select id="findById" resultType="role" parameterType="int" >
+        SELECT r.*  FROM sys_user_role ur INNER JOIN sys_role r ON r.id =ur.`roleid`
+INNER JOIN USER u ON u.id = #{id}
+    </select>
+
+</mapper>

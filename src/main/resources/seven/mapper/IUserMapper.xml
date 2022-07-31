@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="seven.mapper.IUserMapper">
+    <!--查询所有-->
+    <!--<select id="findAll" resultType="com.seven.dao.User">
+        select * from user
+    </select>-->
+    <cache/>
+    <select id="findUserById" parameterType="int" resultType="user">
+        select * from user where id=#{id}
+    </select>
+
+    <resultMap id="userResultMap" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!--一对多使用collection标签关联 property="orderList" 封装到集合的属性名 ofType="order" 封装集合的泛型类型 -->
+        <collection property="orderList" ofType="order">
+            <id column="oid" property="id"></id>
+            <result column="ordertime" property="ordertime"></result>
+            <result column="money" property="money"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="userResultMap2" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!--一对多使用collection标签关联 property="orderList" 封装到集合的属性名 ofType="order" 封装集合的泛型类型 -->
+        <collection property="orderList" ofType="order" select="seven.mapper.IOrderMapper.findByUid" column="id">
+        </collection>
+        <collection property="orderList" ofType="role" select="seven.mapper.IOrderMapper.findByUid" column="id">
+        </collection>
+    </resultMap>
+
+    <resultMap id="userAndRoleMap" type="user">
+        <id column="id" property="id"></id>
+        <result column="username" property="username"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="sex" property="sex"></result>
+        <result column="address" property="address"></result>
+        <collection property="roleList" ofType="role">
+            <id column="rid" property="id"></id>
+            <result column="rolename" property="roleName"></result>
+            <result column="roledesc" property="roleDesc"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findAllResultMap" resultMap="userResultMap">
+        select * from user
+    </select>
+
+    <select id="findByIdAndUsername" resultType="user">
+        select * from user where id = #{id} and username = #{username}
+    </select>
+
+    <select id="findByUsername" resultMap="userResultMap" parameterType="string">
+        select * from user where username like #{username}
+    </select>
+
+    <select id="findAllWithOrder" resultMap="userResultMap">
+        SELECT *,o.id oid FROM USER u LEFT JOIN orders o ON u.`id` = o.`uid`;
+    </select>
+
+    <select id="findAllWithRole" resultMap="userAndRoleMap">
+        SELECT u.*,r.id rid,r.rolename,r.`roleDesc` FROM USER u -- 用户表
+        LEFT JOIN sys_user_role ur -- 左外连接中间表
+        ON u.`id` = ur.`userid` LEFT JOIN sys_role r -- 左外连接中间表
+        ON ur.`roleid` = r.`id`;
+    </select>
+    <select id="findAllWithOrder2" resultMap="userResultMap2" useCache="true">
+        select * from user
+    </select>
+
+</mapper>
